@@ -92,6 +92,22 @@ def get_cosine_with_hard_restarts_schedule_with_warmup(
 
     return LambdaLR(optimizer, lr_lambda, last_epoch)
 
+def get_exp_decay_with_warmup(
+    optimizer, num_warmup_steps, num_training_steps, num_cycles=1.0, last_epoch=-1
+):
+    """
+    """
+
+    def lr_lambda(current_step):
+        if current_step < num_warmup_steps:
+            return float(num_warmup_steps - current_step) / float(max(1, num_warmup_steps))
+        progress = float(current_step - num_warmup_steps) / float(max(1, num_training_steps - num_warmup_steps))
+        if progress >= 1.0:
+            return 0.0
+        return max(0.0, math.pow(current_step, -5))
+
+    return LambdaLR(optimizer, lr_lambda, last_epoch)
+
 
 class AdamW(Optimizer):
     """ Implements Adam algorithm with weight decay fix.
