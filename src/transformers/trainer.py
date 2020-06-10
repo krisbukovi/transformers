@@ -335,10 +335,10 @@ class Trainer:
                 (Optional): boolean - defaults to false, set to "true" to disable wandb entirely
         """
         logger.info('Automatic Weights & Biases logging enabled, to disable set os.environ["WANDB_DISABLED"] = "true"')
-        if id is None:
-            id = wandb.util.generate_id()
+        if self.args.wandb_id is None:
+            self.args.wandb_id = wandb.util.generate_id()
         logger.info("WANDB ID: {}".format(id))
-        wandb.init(id=id, resume=True, project=os.getenv("WANDB_PROJECT", "huggingface"), config=vars(self.args))
+        wandb.init(id=self.args.wandb_id, resume=True, project=os.getenv("WANDB_PROJECT", "huggingface"), config=vars(self.args))
         # keep track of model topology and gradients
         if os.getenv("WANDB_WATCH") != "false":
             wandb.watch(
