@@ -133,6 +133,8 @@ class TrainingArguments:
     )
     tpu_metrics_debug: bool = field(default=False, metadata={"help": "TPU: Whether to print debug metrics"})
 
+    wandb_id: Optional[str] = field(default=None, metadata={"help": "WANDB ID: a globally unique string (per project) corresponding to a single run of your script"})
+
     @property
     def train_batch_size(self) -> int:
         if self.per_gpu_train_batch_size:
