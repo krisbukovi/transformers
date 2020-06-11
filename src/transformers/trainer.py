@@ -20,7 +20,7 @@ from torch.utils.data.sampler import RandomSampler, Sampler, SequentialSampler
 from tqdm.auto import tqdm, trange
 
 from .data.data_collator import DataCollator, DefaultDataCollator
-from .modeling_utils import PreTrainedModel
+from .modeling_utils import PreTrainedModel, PreTrainedTokenizer
 from .optimization import AdamW, get_linear_schedule_with_warmup, get_exp_decay_with_warmup
 from .trainer_utils import PREFIX_CHECKPOINT_DIR, EvalPrediction, PredictionOutput, TrainOutput
 from .training_args import TrainingArguments, is_tpu_available
@@ -157,6 +157,7 @@ class Trainer:
     """
 
     model: PreTrainedModel
+    tokenizer: PreTrainedTokenizer
     args: TrainingArguments
     data_collator: DataCollator
     train_dataset: Optional[Dataset]
@@ -171,6 +172,7 @@ class Trainer:
     def __init__(
         self,
         model: PreTrainedModel,
+        tokenizer: PreTrainedTokenizer,
         args: TrainingArguments,
         data_collator: Optional[DataCollator] = None,
         train_dataset: Optional[Dataset] = None,
@@ -379,6 +381,7 @@ class Trainer:
             and os.path.isfile(os.path.join(model_path, "scheduler.pt"))
         ):
             # Load in optimizer and scheduler states
+            logger.info("Load optimizer and scheduler states...")
             optimizer.load_state_dict(
                 torch.load(os.path.join(model_path, "optimizer.pt"), map_location=self.args.device)
             )
@@ -522,6 +525,7 @@ class Trainer:
                         output_dir = os.path.join(self.args.output_dir, f"{PREFIX_CHECKPOINT_DIR}-{self.global_step}")
 
                         self.save_model(output_dir)
+                        self.tokenizer.save_pretrained(output_dir)
 
                         if self.is_world_master():
                             self._rotate_checkpoints()

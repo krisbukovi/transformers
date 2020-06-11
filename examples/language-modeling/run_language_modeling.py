@@ -228,6 +228,7 @@ def main():
     # Initialize our Trainer
     trainer = Trainer(
         model=model,
+        tokenizer=tokenizer,
         args=training_args,
         data_collator=data_collator,
         train_dataset=train_dataset,
@@ -248,6 +249,7 @@ def main():
         # so that you can share your model easily on huggingface.co/models =)
         if trainer.is_world_master():
             tokenizer.save_pretrained(training_args.output_dir)
+            tokenizer.save_vocabulary(training_args.output_dir)
 
     # Evaluation
     results = {}
