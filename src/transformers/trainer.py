@@ -387,6 +387,13 @@ class Trainer:
             optimizer.load_state_dict(
                 torch.load(os.path.join(model_path, "optimizer.pt"), map_location=self.args.device)
             )
+
+            # load optimizer values manually to GPU
+            for state in optimizer.state.values():
+                for k, v in state.items():
+                    if torch.is_tensor(v):
+                        state[k] = v.cuda()
+
             scheduler.load_state_dict(torch.load(os.path.join(model_path, "scheduler.pt")))
 
         model = self.model
