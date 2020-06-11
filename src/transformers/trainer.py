@@ -20,7 +20,8 @@ from torch.utils.data.sampler import RandomSampler, Sampler, SequentialSampler
 from tqdm.auto import tqdm, trange
 
 from .data.data_collator import DataCollator, DefaultDataCollator
-from .modeling_utils import PreTrainedModel, PreTrainedTokenizer
+from .modeling_utils import PreTrainedModel
+from .tokeniztion_utils import PreTrainedTokenizer
 from .optimization import AdamW, get_linear_schedule_with_warmup, get_exp_decay_with_warmup
 from .trainer_utils import PREFIX_CHECKPOINT_DIR, EvalPrediction, PredictionOutput, TrainOutput
 from .training_args import TrainingArguments, is_tpu_available
