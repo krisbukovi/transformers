@@ -192,6 +192,7 @@ class Trainer:
                 (Optional) in evaluation and prediction, only return the loss
         """
         self.model = model.to(args.device)
+        self.tokenizer = tokenizer
         self.args = args
         if data_collator is not None:
             self.data_collator = data_collator
